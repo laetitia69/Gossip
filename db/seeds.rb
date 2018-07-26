@@ -20,7 +20,8 @@ def clean_database
   City.delete_all 
   Potin.delete_all  
   PrivateMessage.delete_all
-  Comment.delete_all    
+  Comment.delete_all  
+  LikePotin.delete_all    
 end 
 
 
@@ -77,6 +78,30 @@ def create_comment(number)
 end
 
 
+def create_like(number)
+    puts " Etape 4 : Création de #{number} likes."    
+
+    number.times do
+        user  = @users[Random.new.rand(0..@users.size-1)]
+        like  = Like.create(user: user)
+        
+        if Random.new.rand(0..1) % 2 == 0
+          potin = @potins[Random.new.rand(0..@potins.size-1)]
+          like_potin = LikePotin.create(like: like, potin: potin)
+           puts " #{user.first_name} a mit un like au potin suivant << #{potin.title}. >>"    
+    
+        else    
+        comment = @comments[Random.new.rand(0..@comments.size-1)]
+        like_comment = LikeComment.create(like: like, comment: comment) 
+        puts " #{user.first_name} a mit un like au commentaire suivant << #{comment.content} >>"    
+
+        end    
+    end    
+    
+      
+end
+
+
 
 
 puts "-------------------------- *** ---------------------------------"
@@ -87,6 +112,7 @@ create_user(10)
 create_potin(20)
 create_private_message(1)
 create_comment(20)
+create_like(20)
 puts "-------------------------- FIN ---------------------------------"
 
 

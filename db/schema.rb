@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_26_174722) do
+ActiveRecord::Schema.define(version: 2018_07_26_222749) do
 
   create_table "cities", force: :cascade do |t|
     t.string "name"
@@ -27,6 +27,31 @@ ActiveRecord::Schema.define(version: 2018_07_26_174722) do
     t.integer "potin_id"
     t.index ["potin_id"], name: "index_comments_on_potin_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "like_comments", force: :cascade do |t|
+    t.integer "like_id"
+    t.integer "comment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["comment_id"], name: "index_like_comments_on_comment_id"
+    t.index ["like_id"], name: "index_like_comments_on_like_id"
+  end
+
+  create_table "like_potins", force: :cascade do |t|
+    t.integer "like_id"
+    t.integer "potin_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["like_id"], name: "index_like_potins_on_like_id"
+    t.index ["potin_id"], name: "index_like_potins_on_potin_id"
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
   create_table "potins", force: :cascade do |t|
