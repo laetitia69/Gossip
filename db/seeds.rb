@@ -21,7 +21,7 @@ def clean_database
   Potin.delete_all  
   PrivateMessage.delete_all
   Comment.delete_all  
-  LikePotin.delete_all    
+  Like.delete_all    
 end 
 
 
@@ -83,22 +83,17 @@ def create_like(number)
 
     number.times do
         user  = @users[Random.new.rand(0..@users.size-1)]
-        like  = Like.create(user: user)
         
         if Random.new.rand(0..1) % 2 == 0
           potin = @potins[Random.new.rand(0..@potins.size-1)]
-          like_potin = LikePotin.create(like: like, potin: potin)
-           puts " #{user.first_name} a mit un like au potin suivant << #{potin.title}. >>"    
-    
+          Like.create(user: user, imageable: potin)
+          puts " #{user.first_name} a mit un like au potin suivant << #{potin.title}. >>"    
         else    
-        comment = @comments[Random.new.rand(0..@comments.size-1)]
-        like_comment = LikeComment.create(like: like, comment: comment) 
-        puts " #{user.first_name} a mit un like au commentaire suivant << #{comment.content} >>"    
-
+          comment = @comments[Random.new.rand(0..@comments.size-1)]
+          Like.create(user: user, imageable: comment)
+          puts " #{user.first_name} a mit un like au commentaire suivant << #{comment.content} >>"    
         end    
-    end    
-    
-      
+    end     
 end
 
 
