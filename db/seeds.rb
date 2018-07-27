@@ -30,7 +30,7 @@ def create_user(number)
 
     number.times do
     
-        @users << User.create(first_name: Faker::Science.scientist,last_name: Faker::Company.name, email: Faker::Internet.email,age: 45,city:@cities[Random.new.rand(0..@cities.size-1)])     
+        @users << User.create(first_name: Faker::Science.scientist,last_name: Faker::Company.name, email: Faker::Internet.email,age: Faker::Number.between(18, 85),city:@cities[Random.new.rand(0..@cities.size-1)], description: Faker::Lorem.sentence(3) )     
     end
 end
 
@@ -68,18 +68,28 @@ end
 
 
 def create_comment(number)
-    puts " Etape 4 : Création de #{number} commentaires."    
+    puts " \nEtape 4 : Création de #{number} commentaires."    
 
     number.times do
 
-        @comments << Comment.create(content:Faker::Lorem.paragraph(2), user:@users[Random.new.rand(0..@users.size-1)], potin:@potins[Random.new.rand(0..@potins.size-1)])
+        user = @users[Random.new.rand(0..@users.size-1)]
+        
+        if (Random.new.rand(0..1) % 2 == 0) && @comments.size > 0
+          comment = @comments[Random.new.rand(0..@comments.size-1)]
+          @comments << Comment.create(content:Faker::Lorem.paragraph(2), user: user, commented: comment)
+          puts "  #{user.first_name} a ajouter un commentaire au commentaire suivant << #{comment.content} >>"
+        else    
+          potin = @potins[Random.new.rand(0..@potins.size-1)]
+          @comments << Comment.create(content:Faker::Lorem.paragraph(2), user: user,commented: potin)
+          puts "  #{user.first_name} a ajouter un commentaire au potin suivant << #{potin.title}. >>"   
+        end 
    
     end    
 end
 
 
 def create_like(number)
-    puts " Etape 4 : Création de #{number} likes."    
+    puts " \nEtape 5 : Création de #{number} likes."    
 
     number.times do
         user  = @users[Random.new.rand(0..@users.size-1)]
