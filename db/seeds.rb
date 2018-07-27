@@ -21,7 +21,8 @@ def clean_database
   Potin.delete_all  
   PrivateMessage.delete_all
   Comment.delete_all  
-  Like.delete_all    
+  Like.delete_all  
+  Tag.delete_all 
 end 
 
 
@@ -30,7 +31,7 @@ def create_user(number)
 
     number.times do
     
-        @users << User.create(first_name: Faker::Science.scientist,last_name: Faker::Company.name, email: Faker::Internet.email,age: Faker::Number.between(18, 85),city:@cities[Random.new.rand(0..@cities.size-1)], description: Faker::Lorem.sentence(3) )     
+      @users << User.create(first_name: Faker::Science.scientist,last_name: Faker::Company.name, email: Faker::Internet.email,age: Faker::Number.between(18, 85),city:@cities[Random.new.rand(0..@cities.size-1)], description: Faker::Lorem.sentence(3) )     
     end
 end
 
@@ -39,7 +40,7 @@ def create_city(number)
 
     number.times do
     
-        @cities << City.create(name: Faker::Address.city,postal_code: Faker::Address.zip)
+      @cities << City.create(name: Faker::Address.city,postal_code: Faker::Address.zip)
   
         
     end
@@ -50,7 +51,7 @@ def create_potin(number)
 
     number.times do
 
-        @potins << Potin.create(title: Faker::Lorem.sentence(3, true, 4), content:Faker::Lorem.paragraph(2), user:@users[Random.new.rand(0..@users.size-1)],date:Faker::Time.between(DateTime.now - 1, DateTime.now))
+      @potins << Potin.create(title: Faker::Lorem.sentence(3, true, 4), content:Faker::Lorem.paragraph(2), user:@users[Random.new.rand(0..@users.size-1)],date:Faker::Time.between(DateTime.now - 1, DateTime.now))
    
     end    
 end
@@ -61,7 +62,7 @@ def create_private_message(number)
 
     number.times do
 
-        @messages << PrivateMessage.create(content:Faker::Lorem.paragraph(2), sender:@users[Random.new.rand(0..@users.size-1)],recipient:@users[Random.new.rand(0..@users.size-1)],date:Faker::Time.between(DateTime.now - 1, DateTime.now))
+      @messages << PrivateMessage.create(content:Faker::Lorem.paragraph(2), sender:@users[Random.new.rand(0..@users.size-1)],recipient:@users[Random.new.rand(0..@users.size-1)],date:Faker::Time.between(DateTime.now - 1, DateTime.now))
    
     end    
 end
@@ -72,17 +73,17 @@ def create_comment(number)
 
     number.times do
 
-        user = @users[Random.new.rand(0..@users.size-1)]
+      user = @users[Random.new.rand(0..@users.size-1)]
         
-        if (Random.new.rand(0..1) % 2 == 0) && @comments.size > 0
-          comment = @comments[Random.new.rand(0..@comments.size-1)]
-          @comments << Comment.create(content:Faker::Lorem.paragraph(2), user: user, commented: comment)
-          puts "  #{user.first_name} a ajouté un commentaire au commentaire suivant << #{comment.content} >>"
-        else    
-          potin = @potins[Random.new.rand(0..@potins.size-1)]
-          @comments << Comment.create(content:Faker::Lorem.paragraph(2), user: user,commented: potin)
-          puts "  #{user.first_name} a ajouté un commentaire au potin suivant << #{potin.title}. >>"   
-        end 
+      if (Random.new.rand(0..1) % 2 == 0) && @comments.size > 0
+        comment = @comments[Random.new.rand(0..@comments.size-1)]
+        @comments << Comment.create(content:Faker::Lorem.paragraph(2), user: user, commented: comment)
+        puts "  #{user.first_name} a ajouté un commentaire au commentaire suivant << #{comment.content} >>"
+      else    
+        potin = @potins[Random.new.rand(0..@potins.size-1)]
+        @comments << Comment.create(content:Faker::Lorem.paragraph(2), user: user,commented: potin)
+        puts "  #{user.first_name} a ajouté un commentaire au potin suivant << #{potin.title}. >>"   
+      end 
    
     end    
 end
@@ -92,32 +93,41 @@ def create_like(number)
     puts " \nEtape 5 : Création de #{number} likes."    
 
     number.times do
-        user  = @users[Random.new.rand(0..@users.size-1)]
+      user = @users[Random.new.rand(0..@users.size-1)]
         
-        if Random.new.rand(0..1) % 2 == 0
-          potin = @potins[Random.new.rand(0..@potins.size-1)]
-          Like.create(user: user, imageable: potin)
-          puts " #{user.first_name} a mis un like au potin suivant << #{potin.title}. >>"    
-        else    
-          comment = @comments[Random.new.rand(0..@comments.size-1)]
-          Like.create(user: user, imageable: comment)
-          puts " #{user.first_name} a mis un like au commentaire suivant << #{comment.content} >>"    
-        end    
+      if Random.new.rand(0..1) % 2 == 0
+        potin = @potins[Random.new.rand(0..@potins.size-1)]
+        Like.create(user: user, imageable: potin)
+        puts " #{user.first_name} a mis un like au potin suivant << #{potin.title}. >>"    
+      else    
+        comment = @comments[Random.new.rand(0..@comments.size-1)]
+        Like.create(user: user, imageable: comment)
+        puts " #{user.first_name} a mis un like au commentaire suivant << #{comment.content} >>"    
+      end    
     end     
 end
 
 def create_tag(number)
    puts " \nEtape 6 : Création de #{number} tags."
 
-   number.times do
-      tag = Tag.create(title: Faker::Team.name)
+    number.times do
+      potin = @potins[Random.new.rand(0..@potins.size-1)]
+      @tags = Tag.create(title: Faker::Team.name)
+      puts " #{potin.title} a pour tag << #{@tags.title}. >>"
+    end
 
-   end
-    
+    number.times do
+      potin_id = rand((Potin.first.id)..(Potin.last.id))
+      tag_id = rand((Tag.first.id)..(Tag.last.id))
+      potin = Potin.find(potin_id)
+      tag = Tag.find(tag_id)
+      potin.tags << tag
+    end
+
 end
 
 
-puts "-------------------------- *** ---------------------------------"
+puts "----------------------------- *** ------------------------------"
 puts "Bonjour, nous allons créer un jeu de test pour tester nos Models"
 clean_database
 create_city(10)
@@ -126,7 +136,7 @@ create_potin(20)
 create_private_message(1)
 create_comment(20)
 create_like(20)
-create_tag(5)
+create_tag(10)
 puts "-------------------------- FIN ---------------------------------"
 
 
