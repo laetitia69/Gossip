@@ -106,7 +106,15 @@ def create_like(number)
     end     
 end
 
+def create_tag(number)
+   puts " \nEtape 6 : Création de #{number} tags."
 
+   number.times do
+      tag = Tag.create(title: Faker::Team.name)
+
+   end
+    
+end
 
 
 puts "-------------------------- *** ---------------------------------"
@@ -118,6 +126,7 @@ create_potin(20)
 create_private_message(1)
 create_comment(20)
 create_like(20)
+create_tag(5)
 puts "-------------------------- FIN ---------------------------------"
 
 
