@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_26_213850) do
+ActiveRecord::Schema.define(version: 2018_07_27_014851) do
 
   create_table "cities", force: :cascade do |t|
     t.string "name"
@@ -48,6 +48,13 @@ ActiveRecord::Schema.define(version: 2018_07_26_213850) do
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.index ["user_id"], name: "index_potins_on_user_id"
+  end
+
+  create_table "potins_tags", id: false, force: :cascade do |t|
+    t.integer "potin_id", null: false
+    t.integer "tag_id", null: false
+    t.index ["potin_id", "tag_id"], name: "index_potins_tags_on_potin_id_and_tag_id"
+    t.index ["tag_id", "potin_id"], name: "index_potins_tags_on_tag_id_and_potin_id"
   end
 
   create_table "private_messages", force: :cascade do |t|

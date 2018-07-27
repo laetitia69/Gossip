@@ -77,11 +77,11 @@ def create_comment(number)
         if (Random.new.rand(0..1) % 2 == 0) && @comments.size > 0
           comment = @comments[Random.new.rand(0..@comments.size-1)]
           @comments << Comment.create(content:Faker::Lorem.paragraph(2), user: user, commented: comment)
-          puts "  #{user.first_name} a ajouter un commentaire au commentaire suivant << #{comment.content} >>"
+          puts "  #{user.first_name} a ajouté un commentaire au commentaire suivant << #{comment.content} >>"
         else    
           potin = @potins[Random.new.rand(0..@potins.size-1)]
           @comments << Comment.create(content:Faker::Lorem.paragraph(2), user: user,commented: potin)
-          puts "  #{user.first_name} a ajouter un commentaire au potin suivant << #{potin.title}. >>"   
+          puts "  #{user.first_name} a ajouté un commentaire au potin suivant << #{potin.title}. >>"   
         end 
    
     end    
@@ -97,11 +97,11 @@ def create_like(number)
         if Random.new.rand(0..1) % 2 == 0
           potin = @potins[Random.new.rand(0..@potins.size-1)]
           Like.create(user: user, imageable: potin)
-          puts " #{user.first_name} a mit un like au potin suivant << #{potin.title}. >>"    
+          puts " #{user.first_name} a mis un like au potin suivant << #{potin.title}. >>"    
         else    
           comment = @comments[Random.new.rand(0..@comments.size-1)]
           Like.create(user: user, imageable: comment)
-          puts " #{user.first_name} a mit un like au commentaire suivant << #{comment.content} >>"    
+          puts " #{user.first_name} a mis un like au commentaire suivant << #{comment.content} >>"    
         end    
     end     
 end
